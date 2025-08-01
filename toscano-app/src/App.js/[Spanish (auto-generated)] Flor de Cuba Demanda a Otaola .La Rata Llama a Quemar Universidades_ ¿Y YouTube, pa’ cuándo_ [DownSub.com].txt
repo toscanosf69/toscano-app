@@ -1,0 +1,109 @@
+ import { useState, useEffect } from "react";
+
+export default function ChatApp() {
+  const [subscribed, setSubscribed] = useState(false);
+  const [messages, setMessages] = useState([
+    {
+      role: "ai",
+      text: "Aquí no venimos a endulzar verdades. Decime qué tema querés destripar o en qué te ayudo con tu negocio, y lo arrancamos. Si preferís hablar directo, llamá al 786-795-0480.",
+    },
+  ]);
+  const [input, setInput] = useState("");
+
+  useEffect(() => {
+    const paid = localStorage.getItem("toscano_subscribed") === "true";
+    setSubscribed(paid);
+  }, []);
+
+  const sendMessage = () => {
+    if (!input.trim()) return;
+    const newMessages = [...messages, { role: "user", text: input }];
+    setMessages(newMessages);
+    setInput("");
+    setTimeout(() => {
+      setMessages([
+        ...newMessages,
+        {
+          role: "ai",
+          text: `Respuesta sin filtro para: "${input}"`,
+        },
+      ]);
+    }, 1000);
+  };
+
+  const handleSubscription = () => {
+    const script = document.createElement("script");
+    script.src =
+      "https://www.paypal.com/sdk/js?client-id=AVTfaVwd-z5Mjkm6ZpdPpWkqs9VuYVKGZxWEUrKbjzGftXErtmVzh5nMGE520ulfnUafwn7_3yLDom5A&vault=true&intent=subscription";
+    script.addEventListener("load", () => {
+      window.paypal
+        .Buttons({
+          style: {
+            shape: "rect",
+            color: "gold",
+            layout: "vertical",
+            label: "subscribe",
+          },
+          createSubscription: function (data, actions) {
+            return actions.subscription.create({
+              plan_id: "P-1XY02688JW192011DNCGPHDI",
+            });
+          },
+          onApprove: function (data, actions) {
+            alert("¡Gracias por suscribirte!");
+            localStorage.setItem("toscano_subscribed", "true");
+            setSubscribed(true);
+          },
+        })
+        .render("#paypal-button-container");
+    });
+    document.body.appendChild(script);
+  };
+
+  if (!subscribed) {
+    return (
+      <div style={{ padding: "2rem", textAlign: "center" }}>
+        <h1>Acceso exclusivo</h1>
+        <p>
+          Esta app es solo para miembros. Suscribite por $9.99 al mes y accedé
+          al poder sin filtro de Toscano.
+        </p>
+        <div id="paypal-button-container" style={{ margin: "1rem 0" }} />
+        <button onClick={handleSubscription}>Cargar botón de suscripción</button>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: "1rem", maxWidth: "600px", margin: "auto" }}>
+      <div style={{ height: "400px", overflowY: "auto", marginBottom: "1rem" }}>
+        {messages.map((msg, i) => (
+          <div key={i} style={{ textAlign: msg.role === "ai" ? "left" : "right" }}>
+            <div
+              style={{
+                display: "inline-block",
+                padding: "0.5rem 1rem",
+                margin: "0.25rem",
+                backgroundColor: msg.role === "ai" ? "#f0f0f0" : "#cce5ff",
+                borderRadius: "1rem",
+              }}
+            >
+              {msg.text}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "flex", gap: "0.5rem" }}>
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Escribí tu pregunta sin filtro..."
+          style={{ flex: 1, padding: "0.5rem" }}
+        />
+        <button onClick={sendMessage}>Enviar</button>
+      </div>
+    </div>
+  );
+}
+
+
