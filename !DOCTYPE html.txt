@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA Toscano Sin Filtro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    p {
+      max-width: 600px;
+      margin-bottom: 20px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>IA Toscano Sin Filtro</h1>
+  <p>Acceso ilimitado al asistente en español para responder preguntas sobre inmigración, impuestos, negocios, traducciones y más.</p>
+
+  <!-- Botón de suscripción PayPal -->
+  <div id="paypal-button-container-P-1XY02688JW192011DNCGPHDI"></div>
+  <script src="https://www.paypal.com/sdk/js?client-id=AVTfaVwd-z5Mjkm6ZpdPpWkqs9VuYVKGZxWEUrKbjzGftXErtmVzh5nMGE520ulfnUafwn7_3yLDom5A&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+  <script>
+    paypal.Buttons({
+      style: {
+        shape: 'rect',
+        color: 'gold',
+        layout: 'vertical',
+        label: 'subscribe'
+      },
+      createSubscription: function(data, actions) {
+        return actions.subscription.create({
+          plan_id: 'P-1XY02688JW192011DNCGPHDI'
+        });
+      },
+      onApprove: function(data, actions) {
+        alert('¡Gracias por suscribirte! ID de suscripción: ' + data.subscriptionID);
+      }
+    }).render('#paypal-button-container-P-1XY02688JW192011DNCGPHDI');
+  </script>
+</body>
+</html>
